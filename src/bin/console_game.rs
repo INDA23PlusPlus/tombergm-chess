@@ -1,15 +1,31 @@
 extern crate chess;
 
+fn piece_char(name: & str) -> char
+{
+	match name
+	{
+		"K" => '\u{2654}',
+		"Q" => '\u{2655}',
+		"R" => '\u{2656}',
+		"B" => '\u{2657}',
+		"N" => '\u{2658}',
+		"P" => '\u{2659}',
+		"k" => '\u{265A}',
+		"q" => '\u{265B}',
+		"r" => '\u{265C}',
+		"b" => '\u{265D}',
+		"n" => '\u{265E}',
+		"p" => '\u{265F}',
+		" " => ' ',
+		_   => '.',
+	}
+}
+
 fn print_board(board: & chess::Board)
 {
 	for y in 0..8
 	{
-		if y != 0
-		{
-			println!();
-		}
-
-		print!("{} ", 8 - y);
+		print!("\x1B[0m{} ", 8 - y);
 
 		for x in 0..8
 		{
@@ -24,28 +40,41 @@ fn print_board(board: & chess::Board)
 
 			if let chess::Square::Occupied(piece) = board.at(loc)
 			{
-				if piece.player == chess::Player::White
-				{
-					print!("\x1B[1;38;5;255m");
-				}
-				else
-				{
-					print!("\x1B[1;38;5;232m");
+				print!("\x1B[38;5;232m");
 
+				if piece.player == chess::Player::Black
+				{
 					name = name.to_lowercase();
 				}
 			}
 
 			if (x + y) % 2 == 0
 			{
-				print!("\x1B[48;5;247m");
+				print!("\x1B[48;5;255m");
 			}
 			else
 			{
-				print!("\x1B[48;5;240m");
+				print!("\x1B[48;5;245m");
 			}
 
-			print!(" {} \x1B[0m ", name);
+			print!(" {}  \x1B[0m", piece_char(name.as_str()));
+		}
+
+		println!();
+		print!("  ");
+
+		for x in 0..8
+		{
+			if (x + y) % 2 == 0
+			{
+				print!("\x1B[48;5;255m");
+			}
+			else
+			{
+				print!("\x1B[48;5;245m");
+			}
+
+			print!("    \x1B[0m");
 		}
 
 		println!();
@@ -58,7 +87,7 @@ fn main()
 {
 	println!("Enter the name of the destination square (e.g. `e4`),");
 	print!("or both the departure the destination square of your move");
-	println!("(e.g `e2 e4`).");
+	println!("(e.g. `e2 e4`).");
 	println!();
 
 	/* Create a new chess game */
@@ -72,9 +101,10 @@ fn main()
 
 		match game.player()
 		{
-			chess::Player::White => println!("White to play:"),
-			chess::Player::Black => println!("Black to play:"),
+			chess::Player::White => print!("White to play: "),
+			chess::Player::Black => print!("Black to play: "),
 		}
+		let _ = std::io::Write::flush(& mut std::io::stdout());
 
 		let mut input = String::new();
 		let _ = std::io::stdin().read_line(& mut input);
@@ -106,8 +136,7 @@ fn main()
 		}
 		else
 		{
-			print!("Several matching moves were found.");
-			println!(" Pick one:");
+			println!("Several matching moves were found;");
 
 			for i in 0..moves.len()
 			{	
@@ -117,6 +146,9 @@ fn main()
 							& game.board(),
 					& moves));
 			}
+
+			print!("Pick one: ");
+			let _ = std::io::Write::flush(& mut std::io::stdout());
 
 			input = String::new();
 			let _ = std::io::stdin().read_line(& mut input);
