@@ -243,26 +243,6 @@ impl Board
 		false
 	}
 
-	/* Check whether the given player is under attack at the given
-	 * location */
-	pub fn is_attacked(self: & Self, player: Player, loc: Loc) -> bool
-	{
-		let mut b = *self;
-
-		/* Disregard castling moves, see is_check */
-		b.castling = [ Castling { k: None, q: None }; 2 ];
-
-		for m in b.piece_moves(player.opponent())
-		{
-			if m.to == loc
-			{
-				return true;
-			}
-		}
-
-		false
-	}
-
 	/* Enumerate all legal moves */
 	pub fn moves(self: & Self, player: Player) -> Vec<Move>
 	{
@@ -344,6 +324,11 @@ impl Board
 	pub fn from_fen(fen: & str) -> Option<Self>
 	{
 		parse_fen(fen)
+	}
+
+	pub fn fen(self: & Self) -> String
+	{
+		make_fen(self)
 	}
 }
 

@@ -177,6 +177,9 @@ Returns the default starting board of a chess game.
 #### `Board::from_fen(fen: & str) -> Option<Self>`
 Parses a board the given FEN string and returns it if successful.
 
+#### `Board::fen(self: & Self) -> String`
+Returns a string with the FEN representation of the board state.
+
 #### `Board::player: Player`
 The player who has the turn on the board.
 
@@ -200,9 +203,6 @@ Returns a mutable reference to the castling rights for the given player on the b
 
 #### `Board::is_check(self: & Self, player: Player) -> bool`
 Returns true iff the given player is in check.
-
-#### `Board::is_attacked(self: & Self, player: Player, loc: Loc) -> bool`
-Returns true iff the given player would be under attack at the given location.
 
 #### `Board::moves(self: & Self, player: Player) -> Vec<Move>`
 Returns all legal moves for the given player (disregarding the turn).

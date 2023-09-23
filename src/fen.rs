@@ -235,3 +235,74 @@ pub fn parse_fen(fen: & str) -> Option<Board>
 	Some(board)
 }
 
+fn put_piece(fen: & mut String, p: Option<& Piece>, ne: & mut i32)
+{
+	if *ne != 0
+	{
+		let s = format!("{}", ne);
+		fen.push_str(s.as_str());
+
+		*ne = 0;
+	}
+
+	if let Some(p) = p
+	{
+		let mut s = String::from(p.kind.name);
+
+		if p.player == Player::Black
+		{
+			s = s.to_lowercase();
+		}
+
+		fen.push_str(s.as_str());
+	}
+}
+
+pub fn make_fen(board: & Board) -> String
+{
+	let mut fen = String::new();
+
+	for y in 0..8
+	{
+		if y != 0
+		{
+			fen.push('/');
+		}
+
+		let mut ne = 0;
+
+		for x in 0..8
+		{
+			match board.at(Loc { x, y: 7 - y })
+			{
+				Square::Empty
+				=> ne = ne + 1,
+				Square::Occupied(p)
+				=> put_piece(& mut fen, Some(p), & mut ne),
+			}
+		}
+
+		put_piece(& mut fen, None, & mut ne);
+	}
+
+	let player = match board.player
+		{ Player::White => "w", Player::Black => "b" };
+
+	let mut castling = String::new();
+	if let Some(_) = board.castling(Player::White).k { castling.push('K') }
+	if let Some(_) = board.castling(Player::White).q { castling.push('Q') }
+	if let Some(_) = board.castling(Player::Black).k { castling.push('k') }
+	if let Some(_) = board.castling(Player::Black).q { castling.push('q') }
+	if castling.len() == 0 { castling.push('-') }
+
+	let passant = match board.passant
+	{
+		Some(loc) => loc.notation(true, true),
+		None => String::from("-"),
+	};
+
+	let s = format!(" {} {} {} 0 1", player, castling, passant);
+	fen.push_str(s.as_str());
+
+	fen
+}
