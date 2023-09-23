@@ -142,8 +142,25 @@ impl Square
 #[derive(Copy, Clone)]
 pub struct Castling
 {
-	pub k	: bool,
-	pub q	: bool,
+	pub k	: Option<Loc>,
+	pub q	: Option<Loc>,
+}
+
+impl Castling
+{
+	pub const DEFAULT: [Self; 2] =
+	[
+		Self
+		{
+			k: Some(Loc { x: 7, y: 0 }),
+			q: Some(Loc { x: 0, y: 0 }),
+		},
+		Self
+		{
+			k: Some(Loc { x: 7, y: 7 }),
+			q: Some(Loc { x: 0, y: 7 }),
+		},
+	];
 }
 
 #[derive(Copy, Clone)]
@@ -210,7 +227,7 @@ impl Board
 		/* Disregard castling moves as they cannot capture anything */
 		/* This is necessary to prevent infinite recursion when
 		 * check castling availability */
-		b.castling =  [ Castling { k: false, q: false }; 2 ];
+		b.castling =  [ Castling { k: None, q: None }; 2 ];
 
 		for m in b.piece_moves(player.opponent())
 		{
@@ -233,7 +250,7 @@ impl Board
 		let mut b = *self;
 
 		/* Disregard castling moves, see is_check */
-		b.castling = [ Castling { k: false, q: false }; 2 ];
+		b.castling = [ Castling { k: None, q: None }; 2 ];
 
 		for m in b.piece_moves(player.opponent())
 		{
@@ -266,7 +283,7 @@ impl Board
 			player		: Player::White,
 			squares		: [Square::Empty; 8 * 8],
 			passant		: None,
-			castling	: [ Castling { k: true, q: true }; 2 ],
+			castling	: Castling::DEFAULT,
 		};
 
 		/* Piece layout of the 1st and 8th rank */

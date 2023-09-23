@@ -96,17 +96,21 @@ pub fn single_move(b: & Board, p: & Piece, from: Loc, to: Loc) -> Move
 	 * that square is removed. */
 	for loc in [from, to]
 	{
-		match loc
+		if Some(loc) == mb.castling(Player::White).k
 		{
-			Loc {x: 0, y: 0}
-				=> mb.castling_mut(Player::White).q = false,
-			Loc {x: 7, y: 0}
-				=> mb.castling_mut(Player::White).k = false,
-			Loc {x: 0, y: 7}
-				=> mb.castling_mut(Player::Black).q = false,
-			Loc {x: 7, y: 7}
-				=> mb.castling_mut(Player::Black).k = false,
-			_ => (),
+			mb.castling_mut(Player::White).k = None;
+		}
+		if Some(loc) == mb.castling(Player::White).q
+		{
+			mb.castling_mut(Player::White).q = None;
+		}
+		if Some(loc) == mb.castling(Player::Black).k
+		{
+			mb.castling_mut(Player::Black).k = None;
+		}
+		if Some(loc) == mb.castling(Player::Black).q
+		{
+			mb.castling_mut(Player::Black).q = None;
 		}
 	}
 
@@ -235,37 +239,47 @@ pub fn queen_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
 	ms
 }
 
-pub fn check_castle(b: & Board, p: & Piece, loc: Loc, dir: i32) -> Option<Loc>
+pub fn check_castle(b: & Board, p: & Piece, loc: Loc, rook_loc: Option<Loc>,
+			dir: i32)
+	-> Option<Loc>
 {
+	/* Stop if the player doesn't have castling rights */
+	if let None = rook_loc
+	{
+		return None;
+	}
+
 	/* Castling is not allowed when in check */
 	if b.is_check(p.player)
 	{
 		return None;
 	}
 
-	let mut rook_loc = loc.offset((dir, 0));
-
-	/* Look for a rook connected to the king to castle with */
-	while rook_loc.valid()
 	{
-		if let Square::Occupied(q) = b.at(rook_loc)
+		let mut to = loc.offset((dir, 0));
+
+		/* Look for a rook connected to the king to castle with */
+		while to.valid()
 		{
-			if q.is(p.player, & ROOK)
+			if let Square::Occupied(q) = b.at(to)
 			{
-				break;
+				if q.is(p.player, & ROOK)
+				{
+					break;
+				}
+				else
+				{
+					return None;
+				}
 			}
-			else
-			{
-				return None;
-			}
-		}
-	
-		rook_loc = rook_loc.offset((dir, 0));
-	}
 
-	if !rook_loc.valid()
-	{
-		return None;
+			to = to.offset((dir, 0));
+		}
+
+		if Some(to) != rook_loc
+		{
+			return None;
+		}
 	}
 
 	/* Check whether the king is clear to cross */
@@ -283,13 +297,13 @@ pub fn check_castle(b: & Board, p: & Piece, loc: Loc, dir: i32) -> Option<Loc>
 			return None;
 		}
 
-		if to != rook_loc && b.at(to).occupied()
+		if Some(to) != rook_loc && b.at(to).occupied()
 		{
 			return None;
 		}
 	}
 
-	Some(rook_loc)
+	rook_loc
 }
 
 pub fn king_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
@@ -326,21 +340,16 @@ pub fn king_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
 
 	/* Check castling moves */
 	for c in
-	[
-		(b.castling(p.player).k,  1,
-			castle_k_notation
-			as fn(& Move, & Board, & Vec<Move>) -> String),
-		(b.castling(p.player).q, -1,
-			castle_q_notation
-			as fn(& Move, & Board, & Vec<Move>) -> String),
-	]
+		[
+			(b.castling(p.player).k,  1,
+				castle_k_notation
+				as fn(& Move, & Board, & Vec<Move>) -> String),
+			(b.castling(p.player).q, -1,
+				castle_q_notation
+				as fn(& Move, & Board, & Vec<Move>) -> String),
+		]
 	{
-		if c.0 == false
-		{
-			continue;
-		}
-
-		if let Some(rook_loc) = check_castle(b, p, loc, c.1)
+		if let Some(rook_loc) = check_castle(b, p, loc, c.0, c.1)
 		{
 			let to = loc.offset((2 * c.1, 0));
 			let rook_to = to.offset((-c.1, 0));
@@ -363,8 +372,8 @@ pub fn king_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
 	{
 		*m.board.castling_mut(p.player) = Castling
 		{
-			k: false,
-			q: false,
+			k: None,
+			q: None,
 		};
 	}
 

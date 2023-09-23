@@ -160,11 +160,11 @@ The following piece kinds are defined:
 ### `struct Castling`
 Represents the castling rights for a player.
 
-#### `Castling::k: bool`
-True iff the player is allowed to castle king-side.
+#### `Castling::k: Option<Loc>`
+Contains the location of a king-side rook iff the player is allowed to castle king-side.
 
-#### `Castling::q: bool`
-True iff the player is allowed to castle queen-side.
+#### `Castling::q: Option<Loc>`
+Contains the location of a queen-side rook iff the player is allowed to castle queen-side.
 
 ---
 

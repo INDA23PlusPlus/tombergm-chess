@@ -139,29 +139,28 @@ fn parse_player(ci: & mut std::iter::Peekable<std::str::Chars>)
 fn parse_castling(ci: & mut std::iter::Peekable<std::str::Chars>)
 	-> Option<[Castling; 2]>
 {
-	let mut c = [Castling { k: false, q: false }; 2];
+	let mut c = [Castling { k: None, q: None }; 2];
 
 	if matches!(ci.peek(), Some(' ')) { return None; }
+
+	if matches!(ci.peek(), Some('-')) { return Some(c); }
 
 	loop
 	{
 		match ci.next()
 		{
 			Some('K') =>
-				if c[0].k { return None }
-				else { c[0].k = true },
+				if let Some(_) = c[0].k { return None }
+				else { c[0].k = Castling::DEFAULT[0].k },
 			Some('Q') =>
-				if c[0].q { return None }
-				else { c[0].q = true },
+				if let Some(_) = c[0].q { return None }
+				else { c[0].q = Castling::DEFAULT[0].q },
 			Some('k') =>
-				if c[1].k { return None }
-				else { c[1].k = true },
+				if let Some(_) = c[1].k { return None }
+				else { c[1].k = Castling::DEFAULT[1].k },
 			Some('q') =>
-				if c[1].q { return None }
-				else { c[1].q = true },
-			Some('-') =>
-				if c[0].k || c[0].q || c[1].k || c[1].q
-				{ return None },
+				if let Some(_) = c[1].q { return None }
+				else { c[1].q = Castling::DEFAULT[1].q },
 			Some(' ') => return Some(c),
 			_ => return None,
 		}
