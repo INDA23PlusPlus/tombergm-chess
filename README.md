@@ -2,7 +2,7 @@ See `src/bin/console_game.rs` and `src/bin/random_game.rs` for example code.
 
 All moves are associated with only one piece, one square of departure, and one destination square. Castling is considered a king move.
 
-Draw offers, resignation, the 50 move rule, and the threefold repetition rule are not implemented.
+Draw offers, resignation, draw by insufficient material, the 50 move rule, and the threefold repetition rule are not implemented.
 
 ## Definitions
 
