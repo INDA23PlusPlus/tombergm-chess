@@ -249,12 +249,6 @@ pub fn check_castle(b: & Board, p: & Piece, loc: Loc, rook_loc: Option<Loc>,
 		return None;
 	}
 
-	/* Castling is not allowed when in check */
-	if b.is_check(p.player)
-	{
-		return None;
-	}
-
 	{
 		let mut to = loc.offset((dir, 0));
 
@@ -276,28 +270,36 @@ pub fn check_castle(b: & Board, p: & Piece, loc: Loc, rook_loc: Option<Loc>,
 			to = to.offset((dir, 0));
 		}
 
+		/* The rook must be on the castling square, castling with a
+		 * rook that just happens to be next to the king is not
+		 * allowed. */
 		if Some(to) != rook_loc
 		{
 			return None;
 		}
 	}
 
-	/* Check whether the king is clear to cross */
-	for x in 1..3
+	/* Check whether the king is clear to cross. The king always moves two
+	 * squares. */
+	for x in 0..3
 	{
 		let to = loc.offset((x * dir, 0));
 
+		/* Stop if castling would move out of the board */
 		if !to.valid()
 		{
 			return None;
 		}
 
-		if b.is_attacked(p.player, to)
+		/* Stop if a crossing square is occupied by a non-castling
+		 * piece */
+		if to != loc && Some(to) != rook_loc && b.at(to).occupied()
 		{
 			return None;
 		}
 
-		if Some(to) != rook_loc && b.at(to).occupied()
+		/* Stop if the king would move across a check */
+		if single_move(b, p, loc, to).board.is_check(p.player)
 		{
 			return None;
 		}
