@@ -117,12 +117,12 @@ pub fn single_move(b: & Board, p: & Piece, from: Loc, to: Loc) -> Move
 	{
 		board		: mb,
 		piece		: *p,
-		from		: from,
-		to		: to,
+		from,
+		to,
 		notation_fn	: default_move_notation,
 		flags		: MoveFlags
 		{
-			capture		: capture,
+			capture,
 			passant		: false,
 			castle		: false,
 			promotion	: false,
@@ -205,7 +205,7 @@ pub fn diagonal_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
 {
 	let mut ms = Vec::<Move>::new();
 
-	for dir in [(1, 1), (1, -1), (-1, 1), (-1, -1)]
+	for dir in [(-1,  1), (-1, -1), ( 1,  1), ( 1, -1)]
 	{
 		ms.extend(directional_moves(b, p, loc, dir));
 	}
@@ -217,7 +217,7 @@ pub fn cardinal_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
 {
 	let mut ms = Vec::<Move>::new();
 
-	for dir in [(0, 1), (0, -1), (1, 0), (-1, 0)]
+	for dir in [(-1,  0), ( 0,  1), ( 0, -1), ( 1,  0)]
 	{
 		ms.extend(directional_moves(b, p, loc, dir));
 	}
@@ -250,7 +250,7 @@ pub fn check_castle(b: & Board, p: & Piece, loc: Loc, dir: i32) -> Option<Loc>
 	{
 		if let Square::Occupied(q) = b.at(rook_loc)
 		{
-			if q.player == p.player && q.is_kind(& ROOK)
+			if q.is(p.player, & ROOK)
 			{
 				break;
 			}
@@ -299,9 +299,9 @@ pub fn king_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
 	/* Check normal moves */
 	for dir in
 		[
-			(-1, -1), ( 0, -1), ( 1, -1),
-			(-1,  0),           ( 1,  0),
 			(-1,  1), ( 0,  1), ( 1,  1),
+			(-1,  0),           ( 1,  0),
+			(-1, -1), ( 0, -1), ( 1, -1),
 		]
 	{
 		let to = loc.offset(dir);
@@ -377,10 +377,8 @@ pub fn knight_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
 
 	for dir in
 		[
-			( 2, 1), ( 2, -1),
-			( 1, 2), ( 1, -2),
-			(-1, 2), (-1, -2),
-			(-2, 1), (-2, -1)
+			(-2,  1), (-1,  2), ( 1,  2), ( 2,  1),
+			(-2, -1), (-1, -2), ( 1, -2), ( 2, -1),
 		]
 	{
 		let to = loc.offset(dir);
@@ -414,8 +412,8 @@ pub fn pawn_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
 	 * on the player. */
 	let (start, promo, dir) = match p.player
 	{
-		Player::White => (1, 6,  1),
-		Player::Black => (6, 1, -1),
+		Player::White => ( 1,  6,  1),
+		Player::Black => ( 6,  1, -1),
 	};
 
 	let step_loc = loc.offset((0, dir));

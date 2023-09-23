@@ -1,3 +1,4 @@
+use fen::*;
 use r#move::*;
 use piece::*;
 use player::*;
@@ -149,9 +150,9 @@ pub struct Castling
 pub struct Board
 {
 	pub player	: Player,
-	squares		: [Square; 8 * 8],
+	pub squares	: [Square; 8 * 8],
 	pub passant	: Option<Loc>,
-	castling	: [Castling; 2],
+	pub castling	: [Castling; 2],
 }
 
 impl Board
@@ -321,6 +322,11 @@ impl Board
 		}
 
 		b
+	}
+
+	pub fn from_fen(fen: & str) -> Option<Self>
+	{
+		parse_fen(fen)
 	}
 }
 

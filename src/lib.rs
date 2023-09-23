@@ -1,4 +1,5 @@
 mod board;
+mod fen;
 mod game;
 mod r#move;
 mod move_notation;

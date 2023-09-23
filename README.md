@@ -12,6 +12,9 @@ Represents a game of chess.
 #### `Game::new() -> Self`
 Create a new game of chess with the default starting position, and white to move.
 
+#### `Game::from_board(board: Board) -> Self`
+Create a new game from the given starting board.
+
 #### `Game::player(self: & Self) -> Player`
 Returns the player who was the turn.
 
@@ -38,6 +41,9 @@ Returns the state of the game, see `State`.
 
 #### `Game::score(self: & Self) -> [i32; 2]`
 Returns an array containing the score of each player. White's score is at index `0` and black's score is at index `1`. The score is measured in number of half points. When the game is in progress the score is `[0, 0]`. A checkmate results in a score of `[2, 0]` or `[0, 2]`, and a stalemate results in `[1, 1]`.
+
+#### `Game::movetext(self: & Self) -> String`
+Returns a string containing the movetext (as found in PGN) of the game.
 
 ---
 
@@ -167,6 +173,9 @@ Represents a chess board.
 
 #### `Board::default() -> Self`
 Returns the default starting board of a chess game.
+
+#### `Board::from_fen(fen: & str) -> Option<Self>`
+Parses a board the given FEN string and returns it if successful.
 
 #### `Board::player: Player`
 The player who has the turn on the board.

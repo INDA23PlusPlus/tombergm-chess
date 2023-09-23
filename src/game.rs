@@ -28,6 +28,15 @@ impl Game
 		}
 	}
 
+	pub fn from_board(board: Board) -> Self
+	{
+		Game
+		{
+			start_board	: board,
+			moves		: Vec::<Move>::new(),
+		}
+	}
+
 	pub fn player(self: & Self) -> Player
 	{
 		self.board().player
@@ -113,6 +122,50 @@ impl Game
 				Player::Black => [2, 0],
 			}
 		}
+	}
+
+	pub fn movetext(self: & Self) -> String
+	{
+		let mut s = String::new();
+
+		for i in 0..self.halfmove()
+		{
+			let b = self.board_at(i);
+			let m = & self.moves[i as usize];
+			let ms = b.moves(b.player);
+
+			/* Print a space in between moves */
+			if i != 0
+			{
+				s.push(' ');
+			}
+
+			/* Print the move number */
+			if i % 2 == 0
+			{
+				s.push_str(format!("{}. ", 1 + i / 2)
+					.as_str());	
+			}
+
+			/* Print the move notation */
+			s.push_str(format!("{}", m.notation(& b, & ms))
+					.as_str());
+		}
+
+		/* Print the score if the game has ended */
+		if self.state() != State::Playing
+		{
+			let r = self.score().map(|r| match r
+				{
+					1 => "1/2",
+					2 => "1",
+					_ => "0",
+				});
+
+			s.push_str(format!(" {}-{}", r[0], r[1]).as_str());
+		}
+
+		s
 	}
 }
 
