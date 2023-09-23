@@ -2,15 +2,18 @@ extern crate chess;
 
 fn print_board(board: & chess::Board)
 {
-	println!("  ---------------------------------");
-
 	for y in 0..8
 	{
-		print!("{} |", 8 - y);
+		if y != 0
+		{
+			println!();
+		}
+
+		print!("{} ", 8 - y);
 
 		for x in 0..8
 		{
-			let loc = chess::Loc {x: x, y: 7 - y};
+			let loc = chess::Loc {x, y: 7 - y};
 
 			let mut name = String::from(match board.at(loc)
 			{
@@ -18,23 +21,37 @@ fn print_board(board: & chess::Board)
 				chess::Square::Occupied(piece) =>
 					piece.kind.name
 			});
-		
+
 			if let chess::Square::Occupied(piece) = board.at(loc)
 			{
-				if piece.player == chess::Player::Black
+				if piece.player == chess::Player::White
 				{
+					print!("\x1B[1;38;5;255m");
+				}
+				else
+				{
+					print!("\x1B[1;38;5;232m");
+
 					name = name.to_lowercase();
 				}
 			}
 
-			print!(" {} |", name);
+			if (x + y) % 2 == 0
+			{
+				print!("\x1B[48;5;247m");
+			}
+			else
+			{
+				print!("\x1B[48;5;240m");
+			}
+
+			print!(" {} \x1B[0m ", name);
 		}
 
 		println!();
-		println!("  ---------------------------------");
 	}
 
-	println!("    a   b   c   d   e   f   g   h");
+	println!("   a   b   c   d   e   f   g   h");
 }
 
 fn main()
@@ -42,6 +59,7 @@ fn main()
 	println!("Enter the name of the destination square (e.g. `e4`),");
 	print!("or both the departure the destination square of your move");
 	println!("(e.g `e2 e4`).");
+	println!();
 
 	/* Create a new chess game */
 	let mut game = chess::Game::new();
@@ -50,6 +68,8 @@ fn main()
 
 	loop
 	{
+		println!();
+
 		match game.player()
 		{
 			chess::Player::White => println!("White to play:"),
@@ -116,6 +136,8 @@ fn main()
 				},
 			}
 		}
+
+		println!();
 
 		if game.halfmove() % 2 == 0
 		{
