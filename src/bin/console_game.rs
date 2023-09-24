@@ -206,9 +206,10 @@ fn main()
 			});
 
 		print!("{}-{}", s[0], s[1]);
+		println!();
 	}
 
-
-	println!("");
+	println!();
+	println!("{}", game.movetext());
 }
 
