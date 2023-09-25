@@ -442,7 +442,7 @@ pub fn pawn_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
 	}
 
 	/* Compute capturing move locations */
-	let capt_locs = vec![loc.offset((-1, dir)), loc.offset((1, dir))];
+	let capt_locs = [loc.offset((-1, dir)), loc.offset((1, dir))];
 	for to in capt_locs
 	{
 		if to.valid()
