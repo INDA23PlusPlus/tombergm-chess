@@ -331,4 +331,3 @@ impl Board
 		make_fen(self)
 	}
 }
-

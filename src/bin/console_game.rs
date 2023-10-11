@@ -212,4 +212,3 @@ fn main()
 	println!();
 	println!("{}", game.movetext());
 }
-

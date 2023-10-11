@@ -104,4 +104,3 @@ mod tests
 		assert_eq!(perft(& Board::from_fen(P5).unwrap(), 3), 62379);
 	}
 }
-

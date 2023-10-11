@@ -12,4 +12,3 @@ pub use game::{State, Game};
 pub use r#move::Move;
 pub use piece::{PieceKind, Piece, KING, QUEEN, ROOK, BISHOP, KNIGHT, PAWN};
 pub use player::Player;
-

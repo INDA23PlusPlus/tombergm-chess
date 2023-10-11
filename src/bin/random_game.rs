@@ -30,4 +30,3 @@ fn main()
 	/* Print the movetext for the game */
 	println!("{}", game.movetext());
 }
-

@@ -138,4 +138,3 @@ pub fn castle_q_notation(m: & Move, _: & Board, _: & Vec<Move>) -> String
 {
 	add_check_suffix(String::from("O-O-O"), m)
 }
-

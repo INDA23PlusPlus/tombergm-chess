@@ -485,4 +485,3 @@ pub fn pawn_moves(b: & Board, p: & Piece, loc: Loc) -> Vec<Move>
 
 	ms
 }
-

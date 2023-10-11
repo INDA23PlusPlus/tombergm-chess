@@ -75,4 +75,3 @@ pub static PAWN: PieceKind = PieceKind
 	moves_fn	: pawn_moves,
 	name		: "P",
 };
-
