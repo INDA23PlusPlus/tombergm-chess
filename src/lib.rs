@@ -7,8 +7,8 @@ mod piece;
 mod player;
 mod tests;
 
-pub use board::{Loc, Square, Castling, Board};
-pub use game::{State, Game};
-pub use r#move::Move;
-pub use piece::{PieceKind, Piece, KING, QUEEN, ROOK, BISHOP, KNIGHT, PAWN};
-pub use player::Player;
+pub use crate::board::{Loc, Square, Castling, Board};
+pub use crate::game::{State, Game};
+pub use crate::r#move::Move;
+pub use crate::piece::{PieceKind, Piece, KING, QUEEN, ROOK, BISHOP, KNIGHT, PAWN};
+pub use crate::player::Player;

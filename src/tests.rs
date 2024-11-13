@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests
 {
-	use board::Board;
+	use crate::board::Board;
 
 	fn perft(board: & Board, depth: u32) -> u64
 	{

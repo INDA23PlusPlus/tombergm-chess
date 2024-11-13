@@ -1,6 +1,6 @@
-use board::*;
-use r#move::*;
-use player::*;
+use crate::board::*;
+use crate::r#move::*;
+use crate::player::*;
 
 #[derive(Copy, Clone, PartialEq)]
 pub enum State

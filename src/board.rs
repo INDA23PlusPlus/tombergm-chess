@@ -1,7 +1,7 @@
-use fen::*;
-use r#move::*;
-use piece::*;
-use player::*;
+use crate::fen::*;
+use crate::r#move::*;
+use crate::piece::*;
+use crate::player::*;
 
 #[derive(Copy, Clone, PartialEq)]
 pub struct Loc

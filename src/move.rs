@@ -1,7 +1,7 @@
-use board::*;
-use piece::*;
-use player::*;
-use move_notation::*;
+use crate::board::*;
+use crate::piece::*;
+use crate::player::*;
+use crate::move_notation::*;
 
 #[derive(Copy, Clone)]
 pub struct MoveFlags

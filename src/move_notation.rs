@@ -1,5 +1,5 @@
-use board::*;
-use r#move::*;
+use crate::board::*;
+use crate::r#move::*;
 
 /* Check if the given move needs to be ambiguated from the given set of moves
  * by rank, file, or both. */

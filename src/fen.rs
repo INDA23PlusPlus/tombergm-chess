@@ -1,6 +1,6 @@
-use board::*;
-use piece::*;
-use player::*;
+use crate::board::*;
+use crate::piece::*;
+use crate::player::*;
 
 macro_rules! pl
 {
